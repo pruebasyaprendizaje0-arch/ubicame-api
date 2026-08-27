@@ -15,12 +15,12 @@ const options: swaggerJsdoc.Options = {
     },
     servers: [
       {
-        url: 'http://localhost:3000',
-        description: 'Servidor Local de Desarrollo',
-      },
-      {
         url: 'https://api.ubicame.cc',
         description: 'Servidor de Producción (Vultr / Coolify)',
+      },
+      {
+        url: 'http://localhost:3000',
+        description: 'Servidor Local de Desarrollo',
       },
     ],
     components: {
