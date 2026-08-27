@@ -72,6 +72,8 @@ model Business {
 
   branches     Branch[]
 
+  @@index([ownerId])
+  @@index([slug])
   @@map("businesses")
 }
 
@@ -112,6 +114,8 @@ model Branch {
   reservations        Reservation[]
 
   @@unique([businessId, slug])
+  @@index([businessId])
+  @@index([slug])
   @@map("branches")
 }
 
@@ -127,6 +131,7 @@ model Menu {
 
   categories  Category[]
 
+  @@index([branchId])
   @@map("menus")
 }
 
@@ -142,6 +147,8 @@ model Category {
 
   products  Product[]
 
+  @@index([menuId])
+  @@index([order])
   @@map("categories")
 }
 
@@ -160,6 +167,8 @@ model Product {
 
   orderItems  OrderItem[]
 
+  @@index([categoryId])
+  @@index([order])
   @@map("products")
 }
 
@@ -190,6 +199,10 @@ model Order {
 
   items            OrderItem[]
 
+  @@index([branchId])
+  @@index([customerId])
+  @@index([status])
+  @@index([createdAt])
   @@map("orders")
 }
 
@@ -204,6 +217,8 @@ model OrderItem {
   quantity    Int
   totalPrice  Decimal  @db.Decimal(10, 2)
 
+  @@index([orderId])
+  @@index([productId])
   @@map("order_items")
 }
 
@@ -227,5 +242,9 @@ model Reservation {
   createdAt     DateTime          @default(now())
   updatedAt     DateTime          @updatedAt
 
+  @@index([branchId])
+  @@index([customerId])
+  @@index([startsAt, endsAt])
+  @@index([status])
   @@map("reservations")
 }

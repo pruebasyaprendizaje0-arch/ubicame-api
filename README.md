@@ -16,7 +16,7 @@ Conecta los frontends:
 - **Lenguaje**: TypeScript
 - **Framework Web**: Express.js
 - **ORM**: Prisma Client v6
-- **Base de Datos**: PostgreSQL (Compartida)
+- **Base de Datos**: PostgreSQL (Compartida `ubicame_core`)
 - **Validación de esquemas**: Zod
 - **Seguridad**: Helmet, CORS restringido, JWT Auth
 - **Documentación OpenAPI**: Swagger UI (`/docs`)
@@ -58,6 +58,31 @@ npm run dev
 
 La API estará disponible en `http://localhost:3000`.
 La documentación interactiva Swagger estará en `http://localhost:3000/docs`.
+
+---
+
+## 🗄️ Gestión de Migraciones de Base de Datos (Prisma)
+
+### Desarrollo Local
+```bash
+# Generar Cliente Prisma
+npx prisma generate
+
+# Crear y aplicar nuevas migraciones en desarrollo
+npx prisma migrate dev --name init_central_schema
+
+# Abrir visor gráfico Prisma Studio
+npx prisma studio
+```
+
+### Producción (Coolify)
+> [!CAUTION]
+> NUNCA ejecutar `npx prisma db push` en producción, ya que puede causar pérdida destructiva de datos. Usar siempre `prisma migrate deploy`.
+
+```bash
+# Aplicar migraciones pendientes de forma segura sin borrar datos
+npx prisma migrate deploy
+```
 
 ---
 
@@ -117,7 +142,7 @@ CORS_ALLOWED_ORIGINS=https://menuqr.ubicame.cc,https://misreservaciones.ubicame.
 
 ### 4. Desplegar y Ejecutar Migraciones Iniciales
 1. Haz clic en **Deploy**.
-2. Una vez desplegado, puedes abrir la terminal en Coolify para el contenedor de `ubicame-api` y ejecutar las migraciones iniciales de Prisma:
+2. Una vez desplegado, puedes abrir la terminal en Coolify para el contenedor de `ubicame-api` y ejecutar las migraciones iniciales de Prisma de forma no destructiva:
    ```bash
    npx prisma migrate deploy
    ```
