@@ -15,9 +15,21 @@ declare global {
   }
 }
 
-const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret-key-change-in-production';
+export const getJwtSecret = (): string => {
+  const secret = process.env.JWT_SECRET;
+  if (!secret) {
+    if (process.env.NODE_ENV === 'production') {
+      throw new Error('CRÍTICO: La variable de entorno JWT_SECRET es obligatoria en producción');
+    }
+    return 'dev-secret-key-change-in-production-12345';
+  }
+  return secret;
+};
 
-export const authenticateJWT = (
+/**
+ * Middleware para exigir y verificar autenticación mediante JWT Bearer Token.
+ */
+export const requireAuth = (
   req: Request,
   res: Response,
   next: NextFunction
@@ -35,7 +47,8 @@ export const authenticateJWT = (
   const token = authHeader.split(' ')[1];
 
   try {
-    const decoded = jwt.verify(token, JWT_SECRET) as AuthenticatedUser;
+    const secret = getJwtSecret();
+    const decoded = jwt.verify(token, secret) as AuthenticatedUser;
     req.user = decoded;
     next();
   } catch (err) {
@@ -45,3 +58,6 @@ export const authenticateJWT = (
     });
   }
 };
+
+// Alias para compatibilidad con código existente
+export const authenticateJWT = requireAuth;
