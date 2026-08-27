@@ -7,6 +7,19 @@ export const errorHandler = (
   res: Response,
   _next: NextFunction
 ): void => {
+  // Manejo de errores CORS -> HTTP 403 Forbidden
+  if (
+    err?.name === 'CorsForbiddenError' ||
+    err?.statusCode === 403 ||
+    (typeof err?.message === 'string' && err.message.includes('política CORS'))
+  ) {
+    res.status(403).json({
+      error: 'Forbidden',
+      message: err.message || 'Origen no permitido por política CORS',
+    });
+    return;
+  }
+
   console.error('[Error Handler]', err);
 
   if (err instanceof ZodError) {
