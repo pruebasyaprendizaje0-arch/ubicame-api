@@ -4,6 +4,7 @@ import cors from 'cors';
 import swaggerUi from 'swagger-ui-express';
 import healthRoutes from './routes/health.routes';
 import authRoutes from './routes/auth.routes';
+import businessRoutes from './routes/business.routes';
 import menuRoutes from './routes/menu.routes';
 import orderRoutes from './routes/order.routes';
 import reservationRoutes from './routes/reservation.routes';
@@ -67,6 +68,7 @@ app.get('/docs-json', (_req, res) => {
 // API Routes
 app.use('/', healthRoutes);
 app.use('/v1/auth', authRoutes);
+app.use('/v1/businesses', businessRoutes);
 app.use('/v1/branches', menuRoutes);
 app.use('/v1', orderRoutes);
 app.use('/v1', reservationRoutes);
