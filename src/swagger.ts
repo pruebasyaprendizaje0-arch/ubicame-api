@@ -23,6 +23,13 @@ const options: swaggerJsdoc.Options = {
         description: 'Servidor Local de Desarrollo',
       },
     ],
+    tags: [
+      { name: 'Auth', description: 'Gestión de Autenticación de Usuarios' },
+      { name: 'Businesses', description: 'Gestión de Negocios y Sucursales' },
+      { name: 'Menu', description: 'Catálogo de Categorías y Productos' },
+      { name: 'Orders', description: 'Gestión de Pedidos' },
+      { name: 'Reservations', description: 'Gestión de Reservaciones' },
+    ],
     components: {
       securitySchemes: {
         bearerAuth: {
