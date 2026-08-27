@@ -7,13 +7,14 @@ services:
       dockerfile: Dockerfile
     container_name: ubicame-api
     ports:
-      - "4000:4000"
+      - "3000:3000"
     environment:
       - NODE_ENV=development
-      - PORT=4000
-      - DATABASE_URL=postgresql://ubicame_user:ubicame_pass@postgres:5432/ubicame_db?schema=public
+      - PORT=3000
+      - HOST=0.0.0.0
+      - DATABASE_URL=postgresql://ubicame_user:ubicame_pass@postgres:5432/ubicame_core?schema=public
       - JWT_SECRET=dev-secret-key-change-in-production-12345
-      - CORS_ALLOWED_ORIGINS=http://localhost:3000,http://localhost:3001,https://menuqr.ubicame.cc,https://misreservaciones.ubicame.cc
+      - CORS_ALLOWED_ORIGINS=https://menuqr.ubicame.cc,https://misreservaciones.ubicame.cc,http://localhost:3000,http://localhost:3001
     depends_on:
       postgres:
         condition: service_healthy
@@ -25,13 +26,13 @@ services:
     environment:
       POSTGRES_USER: ubicame_user
       POSTGRES_PASSWORD: ubicame_pass
-      POSTGRES_DB: ubicame_db
+      POSTGRES_DB: ubicame_core
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ubicame_user -d ubicame_db"]
+      test: ["CMD-SHELL", "pg_isready -U ubicame_user -d ubicame_core"]
       interval: 5s
       timeout: 5s
       retries: 5
