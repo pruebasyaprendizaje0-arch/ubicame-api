@@ -56,8 +56,8 @@ npm run prisma:generate
 npm run dev
 ```
 
-La API estará disponible en `http://localhost:4000`.
-La documentación interactiva Swagger estará en `http://localhost:4000/docs`.
+La API estará disponible en `http://localhost:3000`.
+La documentación interactiva Swagger estará en `http://localhost:3000/docs`.
 
 ---
 
@@ -65,6 +65,7 @@ La documentación interactiva Swagger estará en `http://localhost:4000/docs`.
 
 ### Sistema & Salud
 - `GET /health` - Chequeo de salud del servicio (status, uptime, timestamp).
+- `GET /health/db` - Chequeo de conexión real a PostgreSQL mediante `DATABASE_URL` (retorna `{ "status": "ok", "database": "connected" }` o HTTP 503 sin exponer secretos).
 
 ### Autenticación
 - `POST /v1/auth/login` - Iniciar sesión de usuario (devuelve JWT).
@@ -89,25 +90,26 @@ La documentación interactiva Swagger estará en `http://localhost:4000/docs`.
 
 ### 1. Crear la Base de Datos PostgreSQL en Coolify
 1. En tu panel de Coolify, haz clic en **+ New Resource** -> **PostgreSQL**.
-2. Asigna un nombre (e.g. `ubicame-postgres`).
-3. Define el nombre de la base de datos (e.g. `ubicame_db`), el usuario (`ubicame_user`) y la contraseña.
+2. Asigna un nombre al recurso (e.g. `ubicame-postgres`).
+3. Define el nombre de la base de datos como **`ubicame_core`**, el usuario (`ubicame_user`) y la contraseña.
 4. Obtén la cadena de conexión interna que provee Coolify:
-   `postgresql://ubicame_user:TU_CONTRASEÑA@postgres-internal-host:5432/ubicame_db?schema=public`
+   `postgresql://ubicame_user:TU_CONTRASEÑA@postgres-internal-host:5432/ubicame_core?schema=public`
 
 ### 2. Crear la Aplicación `ubicame-api` en Coolify
 1. En Coolify, haz clic en **+ New Resource** -> **Private / Public Repository**.
 2. Conecta la URL de tu repositorio Git donde está alojado `ubicame-api`.
 3. Coolify detectará automáticamente el archivo **`Dockerfile`**.
-4. En la sección **Ports Exposed**, configura el puerto `4000`.
-5. En la sección **Healthcheck Path**, ingresa `/health`.
+4. En la sección **Ports Exposed**, configura el puerto `3000`.
+5. En la sección **Healthcheck Path**, ingresa `/health/db`.
 
 ### 3. Configurar Variables de Entorno en Coolify
 Agrega las siguientes variables en la pestaña **Environment Variables** de la aplicación:
 
 ```env
 NODE_ENV=production
-PORT=4000
-DATABASE_URL=postgresql://ubicame_user:TU_CONTRASEÑA@postgres-internal-host:5432/ubicame_db?schema=public
+PORT=3000
+HOST=0.0.0.0
+DATABASE_URL=postgresql://ubicame_user:TU_CONTRASEÑA@postgres-internal-host:5432/ubicame_core?schema=public
 JWT_SECRET=generar_clave_secreta_aleatoria_y_segura
 JWT_EXPIRES_IN=7d
 CORS_ALLOWED_ORIGINS=https://menuqr.ubicame.cc,https://misreservaciones.ubicame.cc
@@ -119,4 +121,4 @@ CORS_ALLOWED_ORIGINS=https://menuqr.ubicame.cc,https://misreservaciones.ubicame.
    ```bash
    npx prisma migrate deploy
    ```
-3. Verifica el endpoint de salud ingresando a `https://api.ubicame.cc/health`.
+3. Verifica el endpoint de salud e integración con PostgreSQL ingresando a `https://api.ubicame.cc/health/db`.
