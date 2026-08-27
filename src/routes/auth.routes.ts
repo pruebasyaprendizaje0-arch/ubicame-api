@@ -132,7 +132,7 @@ router.post('/register', async (req: Request, res: Response, next: NextFunction)
         role: user.role,
       },
       secret,
-      { expiresIn: '7d' }
+      { algorithm: 'HS256', expiresIn: '7d' }
     );
 
     res.status(201).json({
@@ -242,7 +242,7 @@ router.post('/login', async (req: Request, res: Response, next: NextFunction): P
         role: user.role,
       },
       secret,
-      { expiresIn: '7d' }
+      { algorithm: 'HS256', expiresIn: '7d' }
     );
 
     res.json({
