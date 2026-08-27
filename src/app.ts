@@ -69,7 +69,7 @@ app.get('/docs-json', (_req, res) => {
 app.use('/', healthRoutes);
 app.use('/v1/auth', authRoutes);
 app.use('/v1/businesses', businessRoutes);
-app.use('/v1/branches', menuRoutes);
+app.use('/v1', menuRoutes);
 app.use('/v1', orderRoutes);
 app.use('/v1', reservationRoutes);
 
