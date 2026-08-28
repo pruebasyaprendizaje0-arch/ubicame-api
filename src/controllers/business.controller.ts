@@ -123,6 +123,16 @@ export class BusinessController {
       next(error);
     }
   };
+
+  getPublicBusinessBySlug = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const slug = req.params.slug as string;
+      const business = await businessService.getPublicBusinessBySlug(slug);
+      res.json({ business });
+    } catch (error) {
+      next(error);
+    }
+  };
 }
 
-export const businessController = new BusinessController();
+export const businessController = new BusinessController();

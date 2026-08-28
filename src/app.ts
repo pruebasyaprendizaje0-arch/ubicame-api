@@ -68,10 +68,11 @@ app.get('/docs-json', (_req, res) => {
 // API Routes
 app.use('/', healthRoutes);
 app.use('/v1/auth', authRoutes);
-app.use('/v1/businesses', businessRoutes);
+app.use('/v1', businessRoutes);
 app.use('/v1', menuRoutes);
 app.use('/v1', orderRoutes);
 app.use('/v1', reservationRoutes);
+
 
 // Central error handler
 app.use(errorHandler);

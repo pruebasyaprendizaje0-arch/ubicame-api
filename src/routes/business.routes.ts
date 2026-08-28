@@ -6,6 +6,29 @@ const router = Router();
 
 /**
  * @openapi
+ * /v1/public/businesses/{slug}:
+ *   get:
+ *     summary: Obtener información pública de un negocio por su slug
+ *     description: Endpoint público sin autenticación para que misreservaciones consulte la información de un comercio y sus sucursales activas.
+ *     tags:
+ *       - Businesses
+ *     parameters:
+ *       - in: path
+ *         name: slug
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Slug del negocio (ej. pizzeria-bella-italia, pigro)
+ *     responses:
+ *       200:
+ *         description: Detalle del negocio obtenido exitosamente
+ *       404:
+ *         description: Negocio no encontrado
+ */
+router.get('/public/businesses/:slug', businessController.getPublicBusinessBySlug);
+
+/**
+ * @openapi
  * /v1/businesses:
  *   post:
  *     summary: Crear un nuevo negocio
@@ -49,7 +72,7 @@ const router = Router();
  *       401:
  *         description: Token no provisto o inválido
  */
-router.post('/', requireAuth, businessController.createBusiness);
+router.post('/businesses', requireAuth, businessController.createBusiness);
 
 /**
  * @openapi
@@ -67,7 +90,7 @@ router.post('/', requireAuth, businessController.createBusiness);
  *       401:
  *         description: Token no provisto o inválido
  */
-router.get('/', requireAuth, businessController.getBusinesses);
+router.get('/businesses', requireAuth, businessController.getBusinesses);
 
 /**
  * @openapi
@@ -94,7 +117,7 @@ router.get('/', requireAuth, businessController.getBusinesses);
  *       404:
  *         description: Negocio no encontrado
  */
-router.get('/:businessId', requireAuth, businessController.getBusinessById);
+router.get('/businesses/:businessId', requireAuth, businessController.getBusinessById);
 
 /**
  * @openapi
@@ -137,7 +160,7 @@ router.get('/:businessId', requireAuth, businessController.getBusinessById);
  *       404:
  *         description: Negocio no encontrado
  */
-router.put('/:businessId', requireAuth, businessController.updateBusiness);
+router.put('/businesses/:businessId', requireAuth, businessController.updateBusiness);
 
 /**
  * @openapi
@@ -188,7 +211,7 @@ router.put('/:businessId', requireAuth, businessController.updateBusiness);
  *       404:
  *         description: Negocio no encontrado
  */
-router.post('/:businessId/branches', requireAuth, businessController.createBranch);
+router.post('/businesses/:businessId/branches', requireAuth, businessController.createBranch);
 
 /**
  * @openapi
@@ -214,6 +237,6 @@ router.post('/:businessId/branches', requireAuth, businessController.createBranc
  *       404:
  *         description: Negocio no encontrado
  */
-router.get('/:businessId/branches', requireAuth, businessController.getBranches);
+router.get('/businesses/:businessId/branches', requireAuth, businessController.getBranches);
 
 export default router;

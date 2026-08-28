@@ -260,6 +260,44 @@ export class BusinessService {
       orderBy: { createdAt: 'asc' },
     });
   }
+
+  /**
+   * Consultar información pública de un negocio por su slug
+   */
+  async getPublicBusinessBySlug(slug: string) {
+    const business = await prisma.business.findUnique({
+      where: { slug },
+      select: {
+        id: true,
+        ownerId: true,
+        name: true,
+        slug: true,
+        industry: true,
+        description: true,
+        logoUrl: true,
+        coverUrl: true,
+        whatsapp: true,
+        instagram: true,
+        facebook: true,
+        tiktok: true,
+        plan: true,
+        createdAt: true,
+        updatedAt: true,
+        branches: {
+          where: { isActive: true },
+          orderBy: { createdAt: 'asc' },
+        },
+      },
+    });
+
+    if (!business) {
+      const error: any = new Error('Negocio no encontrado');
+      error.statusCode = 404;
+      throw error;
+    }
+
+    return business;
+  }
 }
 
-export const businessService = new BusinessService();
+export const businessService = new BusinessService();

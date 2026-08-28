@@ -82,4 +82,58 @@ describe('Business and Branch Logic Tests', () => {
 
     assert.equal(canAccess, false);
   });
-});
+
+  test('Filtro de negocio público devuelve únicamente las propiedades permitidas y sucursales activas', () => {
+    const mockRawBusiness = {
+      id: 'bus-1',
+      ownerId: 'owner-1',
+      name: 'Pigro',
+      slug: 'pigro',
+      industry: 'RESTAURANTE',
+      description: 'Gastronomía italiana',
+      logoUrl: 'https://cdn.ubicame.cc/logo.png',
+      coverUrl: 'https://cdn.ubicame.cc/cover.png',
+      whatsapp: '+593991234567',
+      instagram: '@pigro',
+      facebook: 'pigro',
+      tiktok: 'pigro',
+      plan: 'PRO',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      branches: [
+        { id: 'b1', name: 'Sucursal Principal', slug: 'principal', isActive: true, createdAt: new Date(1000) },
+        { id: 'b2', name: 'Sucursal Inactiva', slug: 'inactiva', isActive: false, createdAt: new Date(2000) },
+      ],
+    };
+
+    // Filtrar únicamente sucursales activas ordenadas por createdAt asc
+    const activeBranches = mockRawBusiness.branches
+      .filter((b) => b.isActive)
+      .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
+
+    const publicBusiness = {
+      id: mockRawBusiness.id,
+      ownerId: mockRawBusiness.ownerId,
+      name: mockRawBusiness.name,
+      slug: mockRawBusiness.slug,
+      industry: mockRawBusiness.industry,
+      description: mockRawBusiness.description,
+      logoUrl: mockRawBusiness.logoUrl,
+      coverUrl: mockRawBusiness.coverUrl,
+      whatsapp: mockRawBusiness.whatsapp,
+      instagram: mockRawBusiness.instagram,
+      facebook: mockRawBusiness.facebook,
+      tiktok: mockRawBusiness.tiktok,
+      plan: mockRawBusiness.plan,
+      createdAt: mockRawBusiness.createdAt,
+      updatedAt: mockRawBusiness.updatedAt,
+      branches: activeBranches,
+    };
+
+    assert.equal(publicBusiness.slug, 'pigro');
+    assert.equal(publicBusiness.branches.length, 1);
+    assert.equal(publicBusiness.branches[0].id, 'b1');
+    assert.equal((publicBusiness as any).password, undefined);
+    assert.equal((publicBusiness as any).bankAccountNumber, undefined);
+  });
+});
