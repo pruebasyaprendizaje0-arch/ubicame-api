@@ -265,8 +265,13 @@ export class BusinessService {
    * Consultar información pública de un negocio por su slug
    */
   async getPublicBusinessBySlug(slug: string) {
-    const business = await prisma.business.findUnique({
-      where: { slug },
+    const business = await prisma.business.findFirst({
+      where: {
+        slug: {
+          equals: slug,
+          mode: 'insensitive',
+        },
+      },
       select: {
         id: true,
         ownerId: true,

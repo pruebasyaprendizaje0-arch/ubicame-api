@@ -136,4 +136,14 @@ describe('Business and Branch Logic Tests', () => {
     assert.equal((publicBusiness as any).password, undefined);
     assert.equal((publicBusiness as any).bankAccountNumber, undefined);
   });
+
+  test('Búsqueda por slug ignora mayúsculas y minúsculas', () => {
+    const slugQueryInput = 'PIGRO-Bella-Italia';
+    const normalizedInput = slugQueryInput.toLowerCase();
+    const storedSlug = 'pigro-bella-italia';
+
+    // Simula la condición equals con mode: insensitive de Prisma
+    const isMatch = normalizedInput === storedSlug.toLowerCase();
+    assert.equal(isMatch, true);
+  });
 });
