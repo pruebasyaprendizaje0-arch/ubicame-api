@@ -124,6 +124,46 @@ export class BusinessController {
     }
   };
 
+  getBranchById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const branchId = req.params.branchId as string;
+      const userId = req.user!.id;
+      const userRole = req.user!.role;
+
+      const branch = await businessService.getBranchById(branchId, userId, userRole);
+      res.json({ branch });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  updateBranch = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const branchId = req.params.branchId as string;
+      const userId = req.user!.id;
+      const userRole = req.user!.role;
+      const input = createBranchSchema.partial().parse(req.body);
+
+      const branch = await businessService.updateBranch(branchId, userId, userRole, input);
+      res.json({ branch });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  deleteBranch = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const branchId = req.params.branchId as string;
+      const userId = req.user!.id;
+      const userRole = req.user!.role;
+
+      await businessService.deleteBranch(branchId, userId, userRole);
+      res.json({ message: 'Sucursal eliminada' });
+    } catch (error) {
+      next(error);
+    }
+  };
+
   getPublicBusinessBySlug = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const slug = req.params.slug as string;

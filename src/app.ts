@@ -8,6 +8,7 @@ import businessRoutes from './routes/business.routes';
 import menuRoutes from './routes/menu.routes';
 import orderRoutes from './routes/order.routes';
 import reservationRoutes from './routes/reservation.routes';
+import catalogRoutes from './routes/catalog.routes';
 import { errorHandler } from './middleware/errorHandler';
 import { swaggerSpec } from './swagger';
 
@@ -72,6 +73,7 @@ app.use('/v1', businessRoutes);
 app.use('/v1', menuRoutes);
 app.use('/v1', orderRoutes);
 app.use('/v1', reservationRoutes);
+app.use('/v1', catalogRoutes);
 
 
 // Central error handler

@@ -239,4 +239,8 @@ router.post('/businesses/:businessId/branches', requireAuth, businessController.
  */
 router.get('/businesses/:businessId/branches', requireAuth, businessController.getBranches);
 
+router.get('/branches/:branchId', requireAuth, businessController.getBranchById);
+router.put('/branches/:branchId', requireAuth, businessController.updateBranch);
+router.delete('/branches/:branchId', requireAuth, businessController.deleteBranch);
+
 export default router;

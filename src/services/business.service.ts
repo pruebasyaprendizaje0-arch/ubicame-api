@@ -262,8 +262,53 @@ export class BusinessService {
   }
 
   /**
-   * Consultar información pública de un negocio por su slug
+   * Obtener detalle de sucursal por ID
    */
+  async getBranchById(branchId: string, userId: string, userRole: string) {
+    const branch = await prisma.branch.findUnique({
+      where: { id: branchId },
+      include: { business: true, services: true, resources: true, staff: true, availabilityRules: true },
+    });
+
+    if (!branch) {
+      const error: any = new Error('Sucursal no encontrada');
+      error.statusCode = 404;
+      throw error;
+    }
+
+    const isAdmin = userRole === 'SUPERADMIN' || userRole === 'ADMIN';
+    if (!isAdmin && branch.business.ownerId !== userId) {
+      const error: any = new Error('No tienes permiso para acceder a esta sucursal');
+      error.statusCode = 403;
+      throw error;
+    }
+
+    return branch;
+  }
+
+  /**
+   * Actualizar información de sucursal
+   */
+  async updateBranch(branchId: string, userId: string, userRole: string, input: Partial<CreateBranchInput>) {
+    const branch = await this.getBranchById(branchId, userId, userRole);
+
+    return prisma.branch.update({
+      where: { id: branch.id },
+      data: input,
+    });
+  }
+
+  /**
+   * Desactivar / Eliminar sucursal
+   */
+  async deleteBranch(branchId: string, userId: string, userRole: string) {
+    const branch = await this.getBranchById(branchId, userId, userRole);
+
+    return prisma.branch.update({
+      where: { id: branch.id },
+      data: { isActive: false },
+    });
+  }
   async getPublicBusinessBySlug(slug: string) {
     const business = await prisma.business.findFirst({
       where: {
@@ -291,6 +336,13 @@ export class BusinessService {
         branches: {
           where: { isActive: true },
           orderBy: { createdAt: 'asc' },
+          include: {
+            services: { where: { active: true }, orderBy: { createdAt: 'asc' } },
+            resources: { where: { active: true }, orderBy: { name: 'asc' } },
+            staff: { where: { active: true }, orderBy: { name: 'asc' } },
+            availabilityRules: { where: { active: true } },
+            availabilityExceptions: true,
+          },
         },
       },
     });
